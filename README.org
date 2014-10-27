@@ -1,0 +1,26 @@
+#+title: PureScript Free Turtle interpreter
+
+A demonstration of a Turtle interpreter based on the Free monad, with HTML Canvas graphics support.
+
+Example:
+
+#+BEGIN_SRC purescript
+main :: Context2DEff
+main =
+  get2DContext "turtleCanvas" >>=
+  beginStroke >>=
+  compileTurtleProg star >>=
+  endStroke
+
+star = do
+  right 144
+  forward 100
+  right 144
+  forward 100
+  right 144
+  forward 100
+  right 144
+  forward 100
+  right 144
+  forward 100
+#+END_SRC

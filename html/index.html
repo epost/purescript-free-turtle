@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <script src="BrowserMain.js"></script>
+    <title>PureScript Free Turtle</title>
+    <style type="text/css">
+     body { 
+       background: #eee;
+     }
+     canvas { 
+       background: #fff;
+     }
+    </style>
+</head>
+<body>
+    <canvas id="turtleCanvas">
+    </canvas>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById('turtleCanvas'),
+            context = canvas.getContext('2d');
+
+        // set canvas dimensions through js; doing it by css only will stretch the drawing
+        canvas.setAttribute('width',  window.innerWidth);
+        canvas.setAttribute('height', 400);
+
+        // put origin at center
+        context.translate(canvas.width/2, canvas.height/2);
+
+        PS.BrowserMain.main();
+    </script>
+</body>
+</html>
