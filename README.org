@@ -2,15 +2,18 @@
 
 A demonstration of a Turtle interpreter based on the Free monad, with HTML Canvas graphics support.
 
-Example:
+[[file:img/two-stars.png]]
 
 #+BEGIN_SRC purescript
 main :: Context2DEff
-main =
-  get2DContext "turtleCanvas" >>=
-  beginStroke >>=
-  compileTurtleProg star >>=
-  endStroke
+main = renderTurtleProgOnCanvas "turtleCanvas" $ do
+  star
+  penUp
+  forward 40
+  left 100
+  penDown
+  color Red
+  star
 
 star = do
   right 144
