@@ -96,3 +96,12 @@ colorToCanvasStyle col = case col of
   Purple -> "purple"
   Black -> "black"
   CustomColor str -> str
+
+renderTurtleProgOnCanvas :: String -> TurtleProg Unit -> Context2DEff
+renderTurtleProgOnCanvas canvasId prog =
+  get2DContext canvasId >>=
+  initContext >>=
+  beginStroke >>=
+  moveTo 0 0 >>=
+  compileTurtleProg prog >>=
+  endStroke
