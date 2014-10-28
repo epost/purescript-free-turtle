@@ -79,6 +79,20 @@ compileTurtleProg'' = goM compileCmd
           return ((\prog -> prog ++ [beginStroke, moveTo x y]) <$> rest)
 
 
+        compileCmd (UseColor col rest) = do
+
+          return ((\prog -> prog ++ [setStrokeStyle $ colorToCanvasStyle col]) <$> rest)
+
+
 adjacent r angle = r * cos angle
 opposite r angle = r * sin angle
 rad angleDegrees = (2 * pi * (angleDegrees % 360)) / 360
+
+colorToCanvasStyle :: Color -> String
+colorToCanvasStyle col = case col of
+  Red -> "red"
+  Green -> "green"
+  Blue -> "blue"
+  Purple -> "purple"
+  Black -> "black"
+  CustomColor str -> str

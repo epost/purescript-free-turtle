@@ -33,7 +33,8 @@ star = do
 stars = do
   star
   penUp
-  forward 100
+  forward 40
   left 100
   penDown
+  color Red
   star

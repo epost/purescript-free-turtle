@@ -78,3 +78,15 @@ foreign import moveTo
     };
   }
   """ :: Number -> Number -> Context2D -> Context2DEff
+
+foreign import setStrokeStyle
+  """
+  function setStrokeStyle(style) {
+    return function (context) {
+      return function() {
+        context.strokeStyle = style;
+        return context;
+      };
+    };
+  }
+  """ :: String -> Context2D -> Context2DEff
