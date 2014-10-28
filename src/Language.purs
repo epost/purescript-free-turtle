@@ -11,10 +11,14 @@ type Angle = Number
 
 data TurtleCmd a = Forward Number a
                  | Right Angle a
+                 | PenUp a
+                 | PenDown a
 
 instance turtleCmd :: Functor TurtleCmd where
   (<$>) f (Forward dist r) = Forward dist (f r) 
   (<$>) f (Right angle r)  = Right angle (f r) 
+  (<$>) f (PenUp r)        = PenUp (f r)
+  (<$>) f (PenDown r)      = PenDown (f r)
 
 instance turtleCmdShow :: (Show a) => Show (TurtleCmd a) where
   show x = "(TurtleCmd)"
@@ -28,3 +32,9 @@ right :: Angle -> forall a. (TurtleProg Unit)
 right angle = liftF (Right angle unit)
 
 left angle = right (360 - angle)
+
+penUp :: TurtleProg Unit
+penUp = liftF (PenUp unit)
+
+penDown :: TurtleProg Unit
+penDown = liftF (PenDown unit)

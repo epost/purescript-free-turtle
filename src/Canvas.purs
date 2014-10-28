@@ -17,15 +17,23 @@ foreign import get2DContext
   }
   """ :: forall eff. String -> Context2DEff
 
+foreign import initContext
+  """
+  function initContext(context) {
+    return function() {
+      context.beginPath();
+      context.lineWidth = 2;
+      context.strokeStyle = 'purple';
+      return context;
+    };
+  }
+  """ :: forall eff. Context2D -> Context2DEff
 
 foreign import beginStroke
   """
   function beginStroke(context) {
     return function() {
       context.beginPath();
-      context.lineWidth = 2;
-      context.strokeStyle = 'purple';
-      context.moveTo(0, 0);
       return context;
     };
   }
@@ -49,6 +57,21 @@ foreign import lineTo
         return function() {
           //console.log('executing lineTo(', x, ',', y, ')');
           context.lineTo(x,y);
+          return context;
+        };
+      };
+    };
+  }
+  """ :: Number -> Number -> Context2D -> Context2DEff
+
+foreign import moveTo
+  """
+  function moveTo(x) {
+    return function(y) {
+      return function (context) {
+        return function() {
+          //console.log('executing moveTo(', x, ',', y, ')');
+          context.moveTo(x,y);
           return context;
         };
       };

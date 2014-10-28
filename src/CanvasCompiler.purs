@@ -13,11 +13,11 @@ import Data.Foldable
 import Math (sin, cos, pi)
 
 
--- | x, y, rotation
-data Turtle = Turtle Number Number Angle
+-- | x, y, rotation, isPenDown
+data Turtle = Turtle Number Number Angle Boolean
 
 instance turtleShow :: Show Turtle where
-  show (Turtle x y angle) = "(Turtle " ++ show x ++ " " ++ show y ++ " " ++ show angle ++ ")"
+  show (Turtle x y angle isPenDown) = "(Turtle " ++ show x ++ " " ++ show y ++ " " ++ show angle ++ " " ++ show isPenDown ++ ")"
 
 
 compileTurtleProg :: forall a. TurtleProg a -> Context2D -> Context2DEff
@@ -27,7 +27,7 @@ compileTurtleProg turtleProg ctx = foldl (>>=) (pure ctx) (compileTurtleProg' tu
 compileTurtleProg' :: forall a. TurtleProg a -> [Context2D -> Context2DEff]
 compileTurtleProg' turtleProg =
 
-  evalState turtleProgState (Turtle 0 0 0)
+  evalState turtleProgState (Turtle 0 0 0 true)
 
   where turtleProg' = const [] <$> turtleProg
         turtleProgState = compileTurtleProg'' turtleProg'
@@ -43,13 +43,13 @@ compileTurtleProg'' = goM compileCmd
     
         compileCmd (Forward r rest) = do
 
-          Turtle x y angle <- get
+          Turtle x y angle p <- get
           
           let x' = x + adjacent r angle
               y' = y + opposite r angle
               instr = lineTo x' y'
           
-          put (Turtle x' y' angle)
+          put (Turtle x' y' angle p)
 
           return ((\prog -> prog ++ [instr]) <$> rest)
 
@@ -58,10 +58,26 @@ compileTurtleProg'' = goM compileCmd
 
           let angle = rad angleDeg
 
-          modify $ \(Turtle x y angle0) -> Turtle x y (angle0 + angle)
+          modify $ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
 
           return rest
+
+
+        compileCmd (PenUp rest) = do
+
+          modify $ \(Turtle x y angle _) -> Turtle x y angle false
+
+          return ((\prog -> prog ++ [endStroke]) <$> rest)
         
+
+        compileCmd (PenDown rest) = do
+
+          Turtle x y angle p <- get
+
+          put (Turtle x y angle true)
+
+          return ((\prog -> prog ++ [beginStroke, moveTo x y]) <$> rest)
+
 
 adjacent r angle = r * cos angle
 opposite r angle = r * sin angle

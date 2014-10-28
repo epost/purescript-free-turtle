@@ -12,8 +12,10 @@ import Debug.Trace
 main :: Context2DEff
 main =
   get2DContext "turtleCanvas" >>=
+  initContext >>=
   beginStroke >>=
-  compileTurtleProg star >>=
+  moveTo 0 0 >>=
+  compileTurtleProg stars >>=
   endStroke
 
 star = do
@@ -28,4 +30,10 @@ star = do
   right 144
   forward 100
 
-star' = forward 100 >> star
+stars = do
+  star
+  penUp
+  forward 100
+  left 100
+  penDown
+  star
