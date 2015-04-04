@@ -35,7 +35,7 @@ compileTurtleProg' turtleProg =
 
 compileTurtleProg'' :: TurtleProg   [Context2D -> Context2DEff]
                     -> State Turtle [Context2D -> Context2DEff]
-compileTurtleProg'' = goM compileCmd
+compileTurtleProg'' = runFreeM compileCmd
 
   -- pick off the outermost TurtleCmd from the TurtleProg and process it
   where compileCmd :: TurtleCmd    (TurtleProg [Context2D -> Context2DEff])
