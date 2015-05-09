@@ -1,7 +1,7 @@
 {
   "name": "purescript-free-turtle",
   "description": "A demonstration of a Turtle interpreter based on the Free monad, with HTML Canvas graphics support.",
-  "keywords": ["purescript"],
+  "keywords": ["turtle", "logo", "graphics", "free", "monad", "purescript"],
   "ignore": [
     "**/.*",
     "bower_components",

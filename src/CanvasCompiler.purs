@@ -33,6 +33,7 @@ compileTurtleProg' turtleProg =
         turtleProgState = compileTurtleProg'' turtleProg'
 
 
+-- | A natural transformation from `TurtleProg` to `State Turtle`.
 compileTurtleProg'' :: TurtleProg   [Context2D -> Context2DEff]
                     -> State Turtle [Context2D -> Context2DEff]
 compileTurtleProg'' = runFreeM compileCmd
@@ -42,45 +43,29 @@ compileTurtleProg'' = runFreeM compileCmd
                    -> State Turtle (TurtleProg [Context2D -> Context2DEff]) 
     
         compileCmd (Forward r rest) = do
-
           Turtle x y angle p <- get
-          
           let x' = x + adjacent r angle
               y' = y + opposite r angle
               instr = lineTo x' y'
-          
           put (Turtle x' y' angle p)
 
           return ((\prog -> prog ++ [instr]) <$> rest)
 
-        
         compileCmd (Right angleDeg rest) = do
-
           let angle = rad angleDeg
-
           modify $ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
-
           return rest
 
-
         compileCmd (PenUp rest) = do
-
           modify $ \(Turtle x y angle _) -> Turtle x y angle false
-
           return ((\prog -> prog ++ [endStroke]) <$> rest)
-        
 
         compileCmd (PenDown rest) = do
-
           Turtle x y angle p <- get
-
           put (Turtle x y angle true)
-
           return ((\prog -> prog ++ [beginStroke, moveTo x y]) <$> rest)
 
-
         compileCmd (UseColor col rest) = do
-
           return ((\prog -> prog ++ [setStrokeStyle $ colorToCanvasStyle col]) <$> rest)
 
 
