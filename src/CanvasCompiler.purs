@@ -14,7 +14,7 @@ import Math (sin, cos, pi)
 
 
 -- | x, y, rotation, isPenDown
-data Turtle = Turtle Number Number Angle Boolean
+data Turtle = Turtle Distance Distance Angle Boolean
 
 instance turtleShow :: Show Turtle where
   show (Turtle x y angle isPenDown) = "(Turtle " ++ show x ++ " " ++ show y ++ " " ++ show angle ++ " " ++ show isPenDown ++ ")"

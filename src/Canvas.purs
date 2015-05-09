@@ -1,6 +1,7 @@
 module Canvas where
 
 import Control.Monad.Eff
+import Language (Distance (), Angle ())
 
 foreign import data Context2D :: *
 foreign import data DOM :: !
@@ -62,7 +63,7 @@ foreign import lineTo
       };
     };
   }
-  """ :: Number -> Number -> Context2D -> Context2DEff
+  """ :: Distance -> Distance -> Context2D -> Context2DEff
 
 foreign import moveTo
   """
@@ -77,7 +78,7 @@ foreign import moveTo
       };
     };
   }
-  """ :: Number -> Number -> Context2D -> Context2DEff
+  """ :: Distance -> Distance -> Context2D -> Context2DEff
 
 foreign import setStrokeStyle
   """
