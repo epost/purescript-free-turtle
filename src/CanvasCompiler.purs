@@ -51,6 +51,17 @@ compileTurtleProg'' = runFreeM compileCmd
 
           return ((\prog -> prog ++ [instr]) <$> rest)
 
+        compileCmd (Arc r arcAngleDeg rest) = do
+          Turtle x y turtleAngle p <- get
+          let angleEnd = turtleAngle + rad arcAngleDeg
+              angle'   = angleEnd + rad 90
+              x'       = x + adjacent r angleEnd
+              y'       = y + opposite r angleEnd
+              instr    = drawArc x y r turtleAngle angleEnd
+
+          put (Turtle x' y' angle' p)
+          pure (rest <#> (++ [instr]))
+
         compileCmd (Right angleDeg rest) = do
           let angle = rad angleDeg
           modify $ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
@@ -86,7 +97,7 @@ renderTurtleProgOnCanvas :: String -> TurtleProg Unit -> Context2DEff
 renderTurtleProgOnCanvas canvasId prog =
   get2DContext canvasId >>=
   initContext >>=
-  beginStroke >>=
   moveTo 0 0 >>=
+  beginStroke >>=
   compileTurtleProg prog >>=
   endStroke

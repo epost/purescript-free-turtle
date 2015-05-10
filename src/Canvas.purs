@@ -65,6 +65,26 @@ foreign import lineTo
   }
   """ :: Distance -> Distance -> Context2D -> Context2DEff
 
+foreign import drawArc
+  """
+  function drawArc(x) {
+    return function(y) {
+      return function(r) {
+        return function(angleStart) {
+          return function(angleEnd) {
+            return function(context) {
+              return function() {
+                context.arc(x, y, r, angleStart, angleEnd);
+                return context;
+              };
+            };
+          };
+        };
+      };
+    };
+  }
+  """ :: Distance -> Distance -> Distance -> Angle -> Angle -> Context2D -> Context2DEff
+
 foreign import moveTo
   """
   function moveTo(x) {
