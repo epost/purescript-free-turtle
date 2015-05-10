@@ -1,4 +1,4 @@
-module BrowserMain where
+module Main where
 
 import Language
 import CanvasCompiler

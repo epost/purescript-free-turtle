@@ -44,11 +44,11 @@ module.exports = function(grunt) {
     psc: {
       examples: {
         options: {
-          module: ["BrowserMain"],
+          module: ["Main"],
           main: false
         },
         src: ["<%=libFiles%>"],
-        dest: "tmp/BrowserMain.js"
+        dest: "tmp/Main.js"
       }
     }
   });
