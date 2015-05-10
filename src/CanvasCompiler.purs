@@ -96,7 +96,7 @@ colorToCanvasStyle col = case col of
 renderTurtleProgOnCanvas :: String -> TurtleProg Unit -> Context2DEff
 renderTurtleProgOnCanvas canvasId prog =
   get2DContext canvasId >>=
-  initContext >>=
+  initContext (colorToCanvasStyle Purple) >>=
   moveTo 0 0 >>=
   beginStroke >>=
   compileTurtleProg prog >>=

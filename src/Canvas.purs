@@ -8,6 +8,7 @@ foreign import data DOM :: !
 
 type Context2DEff = Eff (dom :: DOM) Context2D
 
+type ColorString = String
 
 foreign import get2DContext
   """
@@ -20,15 +21,17 @@ foreign import get2DContext
 
 foreign import initContext
   """
-  function initContext(context) {
-    return function() {
-      context.beginPath();
-      context.lineWidth = 2;
-      context.strokeStyle = 'purple';
-      return context;
-    };
+  function initContext(color) {
+    return function initContext(context) {
+      return function() {
+        context.beginPath();
+        context.lineWidth = 2;
+        context.strokeStyle = color;
+        return context;
+      };
+    }
   }
-  """ :: forall eff. Context2D -> Context2DEff
+  """ :: forall eff. ColorString -> Context2D -> Context2DEff
 
 foreign import beginStroke
   """
