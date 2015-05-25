@@ -27,3 +27,8 @@ star = do
   right 144
   forward 100
 #+END_SRC
+
+
+To run the example, build as follows, then point your browser at ~html/index.html~:
+
+: pulp browserify > html/index.js
