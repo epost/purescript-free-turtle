@@ -40,7 +40,7 @@ interpretTurtleProg'' = runFreeM interpret
 
   -- pick off the outermost TurtleCmd from the TurtleProg and process it
   where interpret :: TurtleCmd    (TurtleProg (Array (Context2D -> Context2DEff)))
-                     -> State Turtle (TurtleProg (Array (Context2D -> Context2DEff)))
+                  -> State Turtle (TurtleProg (Array (Context2D -> Context2DEff)))
     
         interpret (Forward r rest) = do
           Turtle x y angle p <- get
