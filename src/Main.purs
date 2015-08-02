@@ -2,7 +2,7 @@ module Main where
 
 import Prelude
 import Language
-import CanvasCompiler
+import CanvasInterpreter
 import Canvas (Context2DEff (..))
 import Util
 import Control.Monad
