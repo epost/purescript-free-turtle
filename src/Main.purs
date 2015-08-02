@@ -1,32 +1,32 @@
 module Main where
 
+import Prelude
 import Language
 import CanvasCompiler
-import Canvas
+import Canvas (Context2DEff (..))
 import Util
 import Control.Monad
 import Control.Monad.Eff
-import Debug.Trace
 
 
 main :: Context2DEff
 main = renderTurtleProgOnCanvas "turtleCanvas" $ do
   star
   penUp
-  forward 40
-  left 100
+  forward 40.0
+  left 100.0
   penDown
   color Red
   star
 
 star = do
-  right 144
-  forward 100
-  right 144
-  forward 100
-  right 144
-  forward 100
-  right 144
-  forward 100
-  right 144
-  forward 100
+  right 144.0
+  forward 100.0
+  right 144.0
+  forward 100.0
+  right 144.0
+  forward 100.0
+  right 144.0
+  forward 100.0
+  right 144.0
+  forward 100.0

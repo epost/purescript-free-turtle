@@ -1,5 +1,6 @@
 module CanvasCompiler where
 
+import Prelude
 import Canvas
 import Language
 import Control.Monad
@@ -10,8 +11,7 @@ import Control.Monad.State.Class
 import Control.Monad.Eff
 import Data.Tuple
 import Data.Foldable
-import Math (sin, cos, pi)
-
+import Math (sin, cos, pi, (%))
 
 -- | x, y, rotation, isPenDown
 data Turtle = Turtle Distance Distance Angle Boolean
@@ -24,23 +24,23 @@ compileTurtleProg :: forall a. TurtleProg a -> Context2D -> Context2DEff
 compileTurtleProg turtleProg ctx = foldl (>>=) (pure ctx) (compileTurtleProg' turtleProg)
 
 
-compileTurtleProg' :: forall a. TurtleProg a -> [Context2D -> Context2DEff]
+compileTurtleProg' :: forall a. TurtleProg a -> Array (Context2D -> Context2DEff)
 compileTurtleProg' turtleProg =
 
-  evalState turtleProgState (Turtle 0 0 0 true)
+  evalState turtleProgState (Turtle 0.0 0.0 0.0 true)
 
   where turtleProg' = const [] <$> turtleProg
         turtleProgState = compileTurtleProg'' turtleProg'
 
 
 -- | A natural transformation from `TurtleProg` to `State Turtle`.
-compileTurtleProg'' :: TurtleProg   [Context2D -> Context2DEff]
-                    -> State Turtle [Context2D -> Context2DEff]
+compileTurtleProg'' :: TurtleProg   (Array (Context2D -> Context2DEff))
+                    -> State Turtle (Array (Context2D -> Context2DEff))
 compileTurtleProg'' = runFreeM compileCmd
 
   -- pick off the outermost TurtleCmd from the TurtleProg and process it
-  where compileCmd :: TurtleCmd    (TurtleProg [Context2D -> Context2DEff])
-                   -> State Turtle (TurtleProg [Context2D -> Context2DEff]) 
+  where compileCmd :: TurtleCmd    (TurtleProg (Array (Context2D -> Context2DEff)))
+                   -> State Turtle (TurtleProg (Array (Context2D -> Context2DEff)))
     
         compileCmd (Forward r rest) = do
           Turtle x y angle p <- get
@@ -54,7 +54,7 @@ compileTurtleProg'' = runFreeM compileCmd
         compileCmd (Arc r arcAngleDeg rest) = do
           Turtle x y turtleAngle p <- get
           let angleEnd = turtleAngle + rad arcAngleDeg
-              angle'   = angleEnd + rad 90
+              angle'   = angleEnd + rad 90.0
               x'       = x + adjacent r angleEnd
               y'       = y + opposite r angleEnd
               instr    = drawArc x y r turtleAngle angleEnd
@@ -82,22 +82,13 @@ compileTurtleProg'' = runFreeM compileCmd
 
 adjacent r angle = r * cos angle
 opposite r angle = r * sin angle
-rad angleDegrees = (2 * pi * (angleDegrees % 360)) / 360
-
-colorToCanvasStyle :: Color -> String
-colorToCanvasStyle col = case col of
-  Red -> "red"
-  Green -> "green"
-  Blue -> "blue"
-  Purple -> "purple"
-  Black -> "black"
-  CustomColor str -> str
+rad angleDegrees = (2.0 * pi * (angleDegrees % 360.0)) / 360.0
 
 renderTurtleProgOnCanvas :: String -> TurtleProg Unit -> Context2DEff
 renderTurtleProgOnCanvas canvasId prog =
   get2DContext canvasId >>=
   initContext (colorToCanvasStyle Purple) >>=
-  moveTo 0 0 >>=
+  moveTo 0.0 0.0 >>=
   beginStroke >>=
   compileTurtleProg prog >>=
   endStroke

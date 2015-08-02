@@ -1,116 +1,45 @@
 module Canvas where
 
+import Prelude
+import Data.Maybe
 import Control.Monad.Eff
-import Language (Distance (), Angle ())
+import Language (Distance (), Angle (), Color (..))
 
 foreign import data Context2D :: *
+
 foreign import data DOM :: !
 
 type Context2DEff = Eff (dom :: DOM) Context2D
 
-type ColorString = String
+type CanvasStyleString = String
 
-foreign import get2DContext
-  """
-  function get2DContext(canvasId) {
-    return function() {
-      return document.getElementById(canvasId).getContext('2d');
-    };
-  }
-  """ :: forall eff. String -> Context2DEff
+foreign import get2DContext :: forall eff. String -> Context2DEff
 
-foreign import initContext
-  """
-  function initContext(color) {
-    return function initContext(context) {
-      return function() {
-        context.beginPath();
-        context.lineWidth = 2;
-        context.strokeStyle = color;
-        return context;
-      };
-    }
-  }
-  """ :: forall eff. ColorString -> Context2D -> Context2DEff
+foreign import initContext :: forall eff. CanvasStyleString -> Context2D -> Context2DEff
 
-foreign import beginStroke
-  """
-  function beginStroke(context) {
-    return function() {
-      context.beginPath();
-      return context;
-    };
-  }
-  """ :: forall eff. Context2D -> Context2DEff
+foreign import beginStroke :: forall eff. Context2D -> Context2DEff
 
-foreign import endStroke
-  """
-  function endStroke(context) {
-    return function() {
-      context.stroke();
-      return context;
-    };
-  }
-  """ :: forall eff. Context2D -> Context2DEff
+foreign import endStroke :: forall eff. Context2D -> Context2DEff
 
-foreign import lineTo
-  """
-  function lineTo(x) {
-    return function(y) {
-      return function (context) {
-        return function() {
-          //console.log('executing lineTo(', x, ',', y, ')');
-          context.lineTo(x,y);
-          return context;
-        };
-      };
-    };
-  }
-  """ :: Distance -> Distance -> Context2D -> Context2DEff
+foreign import lineTo :: Distance -> Distance -> Context2D -> Context2DEff
 
-foreign import drawArc
-  """
-  function drawArc(x) {
-    return function(y) {
-      return function(r) {
-        return function(angleStart) {
-          return function(angleEnd) {
-            return function(context) {
-              return function() {
-                context.arc(x, y, r, angleStart, angleEnd);
-                return context;
-              };
-            };
-          };
-        };
-      };
-    };
-  }
-  """ :: Distance -> Distance -> Distance -> Angle -> Angle -> Context2D -> Context2DEff
+drawArc :: Distance -> Distance -> Distance -> Angle -> Angle -> Context2D -> Context2DEff
+drawArc = drawFilledArc' "transparent"
 
-foreign import moveTo
-  """
-  function moveTo(x) {
-    return function(y) {
-      return function (context) {
-        return function() {
-          //console.log('executing moveTo(', x, ',', y, ')');
-          context.moveTo(x,y);
-          return context;
-        };
-      };
-    };
-  }
-  """ :: Distance -> Distance -> Context2D -> Context2DEff
+drawFilledArc :: Maybe Color -> Distance -> Distance -> Distance -> Angle -> Angle -> Context2D -> Context2DEff
+drawFilledArc col = drawFilledArc' $ maybe "" colorToCanvasStyle col
 
-foreign import setStrokeStyle
-  """
-  function setStrokeStyle(style) {
-    return function (context) {
-      return function() {
-        context.strokeStyle = style;
-        return context;
-      };
-    };
-  }
-  """ :: String -> Context2D -> Context2DEff
+foreign import drawFilledArc' :: CanvasStyleString -> Distance -> Distance -> Distance -> Angle -> Angle -> Context2D -> Context2DEff
+
+foreign import moveTo :: Distance -> Distance -> Context2D -> Context2DEff
+
+foreign import setStrokeStyle :: String -> Context2D -> Context2DEff
+
+colorToCanvasStyle :: Color -> String
+colorToCanvasStyle col = case col of
+  Red -> "red"
+  Green -> "green"
+  Blue -> "blue"
+  Purple -> "purple"
+  Black -> "black"
+  CustomColor str -> str
