@@ -15,10 +15,11 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-base"                 : "~0.1.0",
-    "purescript-free"                 : "~0.6.1"
+    "purescript-free": "^0.9.1",
+    "purescript-base": "^0.2.1",
+    "purescript-transformers": "^0.8.4"
   },
   "devDependencies": {
-    "purescript-quickcheck"           : "~0.7.0"
+    "purescript-quickcheck": "^0.12.2"
   }
 }
