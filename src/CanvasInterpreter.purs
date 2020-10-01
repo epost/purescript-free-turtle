@@ -4,27 +4,25 @@ import Prelude
 import Canvas
 import Language
 import Control.Monad
-import Control.Monad.Free
-import Control.Monad.State
-import Control.Monad.Trans
-import Control.Monad.State.Class
-import Control.Monad.Eff
+import Control.Monad.Free (runFreeM)
+import Control.Monad.State (State, evalState, get, modify_, put)
 import Data.Tuple
 import Data.Foldable
+import Effect (Effect)
 import Math (sin, cos, pi, (%))
 
 -- | x, y, rotation, isPenDown
 data Turtle = Turtle Distance Distance Angle Boolean
 
 instance turtleShow :: Show Turtle where
-  show (Turtle x y angle isPenDown) = "(Turtle " ++ show x ++ " " ++ show y ++ " " ++ show angle ++ " " ++ show isPenDown ++ ")"
+  show (Turtle x y angle isPenDown) = "(Turtle " <> show x <> " " <> show y <> " " <> show angle <> " " <> show isPenDown <> ")"
 
 
-interpretTurtleProg :: forall a. TurtleProg a -> Context2D -> Context2DEff
+interpretTurtleProg :: forall a. TurtleProg a -> Context2D -> Effect Context2D
 interpretTurtleProg turtleProg ctx = foldl (>>=) (pure ctx) (interpretTurtleProg' turtleProg)
 
 
-interpretTurtleProg' :: forall a. TurtleProg a -> Array (Context2D -> Context2DEff)
+interpretTurtleProg' :: forall a. TurtleProg a -> Array (Context2D -> Effect Context2D)
 interpretTurtleProg' turtleProg =
 
   evalState turtleProgState (Turtle 0.0 0.0 0.0 true)
@@ -34,13 +32,13 @@ interpretTurtleProg' turtleProg =
 
 
 -- | A natural transformation from `TurtleProg` to `State Turtle`.
-interpretTurtleProg'' :: TurtleProg   (Array (Context2D -> Context2DEff))
-                      -> State Turtle (Array (Context2D -> Context2DEff))
+interpretTurtleProg'' :: TurtleProg   (Array (Context2D -> Effect Context2D))
+                      -> State Turtle (Array (Context2D -> Effect Context2D))
 interpretTurtleProg'' = runFreeM interpret
 
   -- pick off the outermost TurtleCmd from the TurtleProg and process it
-  where interpret :: TurtleCmd    (TurtleProg (Array (Context2D -> Context2DEff)))
-                  -> State Turtle (TurtleProg (Array (Context2D -> Context2DEff)))
+  where interpret :: TurtleCmd    (TurtleProg (Array (Context2D -> Effect Context2D)))
+                  -> State Turtle (TurtleProg (Array (Context2D -> Effect Context2D)))
     
         interpret (Forward r rest) = do
           Turtle x y angle p <- get
@@ -49,7 +47,7 @@ interpretTurtleProg'' = runFreeM interpret
               instr = lineTo x' y'
           put (Turtle x' y' angle p)
 
-          return ((\prog -> prog ++ [instr]) <$> rest)
+          pure ((\prog -> prog <> [instr]) <$> rest)
 
         interpret (Arc r arcAngleDeg rest) = do
           Turtle x y turtleAngle p <- get
@@ -60,31 +58,31 @@ interpretTurtleProg'' = runFreeM interpret
               instr    = drawArc x y r turtleAngle angleEnd
 
           put (Turtle x' y' angle' p)
-          pure (rest <#> (++ [instr]))
+          pure (rest <#> (_ <> [instr]))
 
         interpret (Right angleDeg rest) = do
           let angle = rad angleDeg
-          modify $ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
-          return rest
+          modify_ $ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
+          pure rest
 
         interpret (PenUp rest) = do
-          modify $ \(Turtle x y angle _) -> Turtle x y angle false
-          return ((\prog -> prog ++ [endStroke]) <$> rest)
+          modify_ $ \(Turtle x y angle _) -> Turtle x y angle false
+          pure ((\prog -> prog <> [endStroke]) <$> rest)
 
         interpret (PenDown rest) = do
           Turtle x y angle p <- get
           put (Turtle x y angle true)
-          return ((\prog -> prog ++ [beginStroke, moveTo x y]) <$> rest)
+          pure ((\prog -> prog <> [beginStroke, moveTo x y]) <$> rest)
 
         interpret (UseColor col rest) = do
-          return ((\prog -> prog ++ [setStrokeStyle $ colorToCanvasStyle col]) <$> rest)
+          pure ((\prog -> prog <> [setStrokeStyle $ colorToCanvasStyle col]) <$> rest)
 
 
 adjacent r angle = r * cos angle
 opposite r angle = r * sin angle
 rad angleDegrees = (2.0 * pi * (angleDegrees % 360.0)) / 360.0
 
-renderTurtleProgOnCanvas :: String -> TurtleProg Unit -> Context2DEff
+renderTurtleProgOnCanvas :: String -> TurtleProg Unit -> Effect Context2D
 renderTurtleProgOnCanvas canvasId prog =
   get2DContext canvasId >>=
   initContext (colorToCanvasStyle Purple) >>=

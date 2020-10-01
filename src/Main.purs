@@ -2,13 +2,12 @@ module Main where
 
 import Prelude
 import Language
+import Canvas (Context2D)
 import CanvasInterpreter
-import Canvas (Context2DEff (..))
 import Control.Monad
-import Control.Monad.Eff
+import Effect (Effect)
 
-
-main :: Context2DEff
+main :: Effect Context2D
 main = renderTurtleProgOnCanvas "turtleCanvas" $ do
   star
   penUp
