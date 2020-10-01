@@ -11,7 +11,6 @@ exports.get2DContext = function(canvasId) {
 exports.initContext = function(color) {
   return function initContext(context) {
     return function() {
-      context.beginPath();
       context.lineWidth = 2;
       context.strokeStyle = color;
       return context;
@@ -19,14 +18,21 @@ exports.initContext = function(color) {
   };
 };
 
-exports.beginStroke = function(context) {
+exports.beginPath = function(context) {
   return function() {
     context.beginPath();
     return context;
   };
 };
 
-exports.endStroke = function(context) {
+exports.closePath = function(context) {
+  return function() {
+    context.closePath();
+    return context;
+  };
+};
+
+exports.stroke = function(context) {
   return function() {
     context.stroke();
     return context;

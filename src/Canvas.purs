@@ -13,9 +13,11 @@ foreign import get2DContext :: String -> Effect Context2D
 
 foreign import initContext :: CanvasStyleString -> Context2D -> Effect Context2D
 
-foreign import beginStroke :: Context2D -> Effect Context2D
+foreign import beginPath :: Context2D -> Effect Context2D
 
-foreign import endStroke :: Context2D -> Effect Context2D
+foreign import closePath :: Context2D -> Effect Context2D
+
+foreign import stroke :: Context2D -> Effect Context2D
 
 foreign import lineTo :: Distance -> Distance -> Context2D -> Effect Context2D
 
@@ -36,6 +38,10 @@ colorToCanvasStyle col = case col of
   Red -> "red"
   Green -> "green"
   Blue -> "blue"
+  Yellow -> "yellow"
   Purple -> "purple"
+  Cyan -> "cyan"
+  Magenta -> "magenta"
   Black -> "black"
+  White -> "white"
   CustomColor str -> str

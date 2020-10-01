@@ -7,7 +7,7 @@ import Control.Monad.Free (Free, liftF)
 
 type Angle = Number
 type Distance = Number
-data Color = Red | Green | Blue | Purple | Black | CustomColor String
+data Color = Red | Green | Blue | Yellow | Purple | Magenta | Cyan | Black | White | CustomColor String
 
 data TurtleCmd a = Forward Distance a
                  | Arc Distance Angle a

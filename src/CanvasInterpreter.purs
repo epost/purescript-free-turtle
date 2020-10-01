@@ -62,17 +62,17 @@ interpretTurtleProg'' = runFreeM interpret
 
         interpret (Right angleDeg rest) = do
           let angle = rad angleDeg
-          modify_ $ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
+          modify_ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
           pure rest
 
         interpret (PenUp rest) = do
           modify_ $ \(Turtle x y angle _) -> Turtle x y angle false
-          pure ((\prog -> prog <> [endStroke]) <$> rest)
+          pure ((\prog -> prog <> [stroke]) <$> rest)
 
         interpret (PenDown rest) = do
           Turtle x y angle p <- get
           put (Turtle x y angle true)
-          pure ((\prog -> prog <> [beginStroke, moveTo x y]) <$> rest)
+          pure ((\prog -> prog <> [beginPath, moveTo x y]) <$> rest)
 
         interpret (UseColor col rest) = do
           pure ((\prog -> prog <> [setStrokeStyle $ colorToCanvasStyle col]) <$> rest)
@@ -87,6 +87,4 @@ renderTurtleProgOnCanvas canvasId prog =
   get2DContext canvasId >>=
   initContext (colorToCanvasStyle Purple) >>=
   moveTo 0.0 0.0 >>=
-  beginStroke >>=
-  interpretTurtleProg prog >>=
-  endStroke
+  interpretTurtleProg prog

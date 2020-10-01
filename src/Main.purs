@@ -9,15 +9,23 @@ import Effect (Effect)
 
 main :: Effect Context2D
 main = renderTurtleProgOnCanvas "turtleCanvas" $ do
+  color Purple
   star
-  penUp
+
   forward 40.0
   left 100.0
-  penDown
+
   color Red
   star
 
+  forward 40.0
+  left 100.0
+
+  color Green
+  star
+
 star = do
+  penDown
   right 144.0
   forward 100.0
   right 144.0
@@ -28,3 +36,4 @@ star = do
   forward 100.0
   right 144.0
   forward 100.0
+  penUp
