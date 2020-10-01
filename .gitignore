@@ -1,0 +1,9 @@
+/node_modules/
+/output/
+/generated-docs/
+/.psc-package/
+/.psc*
+/.purs*
+/.psa*
+/.spago
+/html/index.js
