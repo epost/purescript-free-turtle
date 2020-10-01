@@ -3,12 +3,12 @@ module Main where
 import Prelude
 import Language
 import Canvas (Context2D)
-import CanvasInterpreter
+import CanvasInterpreter as CanvasInterpreter
 import Control.Monad
 import Effect (Effect)
 
 main :: Effect Context2D
-main = renderTurtleProgOnCanvas "turtleCanvas" $ do
+main = CanvasInterpreter.render "turtleCanvas" do
   color Purple
   star
 

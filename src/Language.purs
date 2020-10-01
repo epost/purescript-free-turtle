@@ -16,7 +16,7 @@ data TurtleCmd a = Forward Distance a
                  | PenDown a
                  | UseColor Color a
 
-instance turtleCmd :: Functor TurtleCmd where
+instance functorTurtleCmd :: Functor TurtleCmd where
   map f (Forward dist r)     = Forward dist (f r)
   map f (Arc radius angle r) = Arc radius angle (f r)
   map f (Right angle r)      = Right angle (f r)
@@ -25,7 +25,7 @@ instance turtleCmd :: Functor TurtleCmd where
   map f (UseColor col r)     = UseColor col (f r)
 
 instance turtleCmdShow :: (Show a) => Show (TurtleCmd a) where
-  show x = "(TurtleCmd)"
+  show x = "(TurtleCmd TODO)"
 
 type TurtleProg = Free TurtleCmd
 
