@@ -4,11 +4,8 @@ import Prelude
 import Canvas
 import Language
 import Control.Monad
-import Control.Monad.Free
-import Control.Monad.State
-import Control.Monad.Trans
-import Control.Monad.State.Class
-import Control.Monad.Eff
+import Control.Monad.Free (runFreeM)
+import Control.Monad.State (State, evalState, get, modify_, put)
 import Data.Tuple
 import Data.Foldable
 import Math (sin, cos, pi, (%))
@@ -17,7 +14,7 @@ import Math (sin, cos, pi, (%))
 data Turtle = Turtle Distance Distance Angle Boolean
 
 instance turtleShow :: Show Turtle where
-  show (Turtle x y angle isPenDown) = "(Turtle " ++ show x ++ " " ++ show y ++ " " ++ show angle ++ " " ++ show isPenDown ++ ")"
+  show (Turtle x y angle isPenDown) = "(Turtle " <> show x <> " " <> show y <> " " <> show angle <> " " <> show isPenDown <> ")"
 
 
 interpretTurtleProg :: forall a. TurtleProg a -> Context2D -> Context2DEff
@@ -49,7 +46,7 @@ interpretTurtleProg'' = runFreeM interpret
               instr = lineTo x' y'
           put (Turtle x' y' angle p)
 
-          return ((\prog -> prog ++ [instr]) <$> rest)
+          pure ((\prog -> prog <> [instr]) <$> rest)
 
         interpret (Arc r arcAngleDeg rest) = do
           Turtle x y turtleAngle p <- get
@@ -60,24 +57,24 @@ interpretTurtleProg'' = runFreeM interpret
               instr    = drawArc x y r turtleAngle angleEnd
 
           put (Turtle x' y' angle' p)
-          pure (rest <#> (++ [instr]))
+          pure (rest <#> (_ <> [instr]))
 
         interpret (Right angleDeg rest) = do
           let angle = rad angleDeg
-          modify $ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
-          return rest
+          modify_ $ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
+          pure rest
 
         interpret (PenUp rest) = do
-          modify $ \(Turtle x y angle _) -> Turtle x y angle false
-          return ((\prog -> prog ++ [endStroke]) <$> rest)
+          modify_ $ \(Turtle x y angle _) -> Turtle x y angle false
+          pure ((\prog -> prog <> [endStroke]) <$> rest)
 
         interpret (PenDown rest) = do
           Turtle x y angle p <- get
           put (Turtle x y angle true)
-          return ((\prog -> prog ++ [beginStroke, moveTo x y]) <$> rest)
+          pure ((\prog -> prog <> [beginStroke, moveTo x y]) <$> rest)
 
         interpret (UseColor col rest) = do
-          return ((\prog -> prog ++ [setStrokeStyle $ colorToCanvasStyle col]) <$> rest)
+          pure ((\prog -> prog <> [setStrokeStyle $ colorToCanvasStyle col]) <$> rest)
 
 
 adjacent r angle = r * cos angle

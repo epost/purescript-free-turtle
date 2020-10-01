@@ -28,7 +28,12 @@ star = do
   forward 100.0
 #+END_SRC
 
+*  Usage
 
-To run the example, build as follows, then point your browser at ~html/index.html~:
+In your shell, type:
 
-: pulp browserify > html/index.js
+: npm install
+: npm run build
+: npm run bundle
+
+Then point your browser to [[./html/index.html]].

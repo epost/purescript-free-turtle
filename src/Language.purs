@@ -2,10 +2,7 @@ module Language where
 
 import Prelude
 import Control.Monad
-import Control.Monad.Free
-import Control.Monad.State
-import Control.Monad.Trans
-import Control.Monad.State.Class
+import Control.Monad.Free (Free, liftF)
 
 
 type Angle = Number

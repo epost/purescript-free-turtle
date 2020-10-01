@@ -1,16 +1,21 @@
 {
   "name": "purescript-free-turtle",
   "version": "0.1.0",
-  "description": "A demonstration of a Turtle interpreter based on the Free monad, with HTML Canvas graphics support.",
+  "description": "Turtle graphics language with a free monad Canvas interpreter, for educational purposes.",
   "main": "",
   "private": true,
   "author": "Erik Post",
   "license": "MIT",
+  "scripts": {
+    "postinstall": "npm run spago-install",
+    "build": "spago build",
+    "bundle": "spago bundle-app --main Main --to html/index.js",
+    "spago-install": "spago install"
+  },
   "dependencies": {
-    "grunt": "~0.4.4",
-    "grunt-contrib-copy": "~0.5.0",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-execute": "~0.1.5",
-    "grunt-purescript": "~0.5.0"
+  },
+  "devDependencies": {
+    "purescript": "^0.13.8",
+    "spago": "^0.16.0"
   }
 }

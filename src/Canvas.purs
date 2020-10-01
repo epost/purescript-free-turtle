@@ -1,25 +1,23 @@
 module Canvas where
 
 import Prelude
-import Data.Maybe
-import Control.Monad.Eff
+import Data.Maybe (Maybe, maybe)
+import Effect (Effect)
 import Language (Distance (), Angle (), Color (..))
 
-foreign import data Context2D :: *
+foreign import data Context2D :: Type
 
-foreign import data DOM :: !
-
-type Context2DEff = Eff (dom :: DOM) Context2D
+type Context2DEff = Effect Context2D
 
 type CanvasStyleString = String
 
-foreign import get2DContext :: forall eff. String -> Context2DEff
+foreign import get2DContext :: String -> Context2DEff
 
-foreign import initContext :: forall eff. CanvasStyleString -> Context2D -> Context2DEff
+foreign import initContext :: CanvasStyleString -> Context2D -> Context2DEff
 
-foreign import beginStroke :: forall eff. Context2D -> Context2DEff
+foreign import beginStroke :: Context2D -> Context2DEff
 
-foreign import endStroke :: forall eff. Context2D -> Context2DEff
+foreign import endStroke :: Context2D -> Context2DEff
 
 foreign import lineTo :: Distance -> Distance -> Context2D -> Context2DEff
 

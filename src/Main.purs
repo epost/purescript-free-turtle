@@ -5,7 +5,6 @@ import Language
 import CanvasInterpreter
 import Canvas (Context2DEff (..))
 import Control.Monad
-import Control.Monad.Eff
 
 
 main :: Context2DEff
