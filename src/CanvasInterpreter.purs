@@ -8,6 +8,7 @@ import Control.Monad.Free (runFreeM)
 import Control.Monad.State (State, evalState, get, modify_, put)
 import Data.Tuple
 import Data.Foldable
+import Effect (Effect)
 import Math (sin, cos, pi, (%))
 
 -- | x, y, rotation, isPenDown
@@ -17,11 +18,11 @@ instance turtleShow :: Show Turtle where
   show (Turtle x y angle isPenDown) = "(Turtle " <> show x <> " " <> show y <> " " <> show angle <> " " <> show isPenDown <> ")"
 
 
-interpretTurtleProg :: forall a. TurtleProg a -> Context2D -> Context2DEff
+interpretTurtleProg :: forall a. TurtleProg a -> Context2D -> Effect Context2D
 interpretTurtleProg turtleProg ctx = foldl (>>=) (pure ctx) (interpretTurtleProg' turtleProg)
 
 
-interpretTurtleProg' :: forall a. TurtleProg a -> Array (Context2D -> Context2DEff)
+interpretTurtleProg' :: forall a. TurtleProg a -> Array (Context2D -> Effect Context2D)
 interpretTurtleProg' turtleProg =
 
   evalState turtleProgState (Turtle 0.0 0.0 0.0 true)
@@ -31,13 +32,13 @@ interpretTurtleProg' turtleProg =
 
 
 -- | A natural transformation from `TurtleProg` to `State Turtle`.
-interpretTurtleProg'' :: TurtleProg   (Array (Context2D -> Context2DEff))
-                      -> State Turtle (Array (Context2D -> Context2DEff))
+interpretTurtleProg'' :: TurtleProg   (Array (Context2D -> Effect Context2D))
+                      -> State Turtle (Array (Context2D -> Effect Context2D))
 interpretTurtleProg'' = runFreeM interpret
 
   -- pick off the outermost TurtleCmd from the TurtleProg and process it
-  where interpret :: TurtleCmd    (TurtleProg (Array (Context2D -> Context2DEff)))
-                  -> State Turtle (TurtleProg (Array (Context2D -> Context2DEff)))
+  where interpret :: TurtleCmd    (TurtleProg (Array (Context2D -> Effect Context2D)))
+                  -> State Turtle (TurtleProg (Array (Context2D -> Effect Context2D)))
     
         interpret (Forward r rest) = do
           Turtle x y angle p <- get
@@ -81,7 +82,7 @@ adjacent r angle = r * cos angle
 opposite r angle = r * sin angle
 rad angleDegrees = (2.0 * pi * (angleDegrees % 360.0)) / 360.0
 
-renderTurtleProgOnCanvas :: String -> TurtleProg Unit -> Context2DEff
+renderTurtleProgOnCanvas :: String -> TurtleProg Unit -> Effect Context2D
 renderTurtleProgOnCanvas canvasId prog =
   get2DContext canvasId >>=
   initContext (colorToCanvasStyle Purple) >>=
