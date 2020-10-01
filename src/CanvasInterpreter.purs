@@ -2,13 +2,13 @@ module CanvasInterpreter where
 
 import Prelude
 import Canvas
+import Effect
 import Language
 import Control.Monad
 import Control.Monad.Free (runFreeM)
 import Control.Monad.State (State, evalState, get, modify_, put)
 import Data.Tuple
 import Data.Foldable
-import Effect (Effect)
 import Math (sin, cos, pi, (%))
 
 -- | x, y, rotation, isPenDown
