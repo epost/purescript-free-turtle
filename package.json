@@ -7,13 +7,15 @@
   "author": "Erik Post",
   "license": "MIT",
   "scripts": {
-    "postinstall": "npm run spago-install",
+    "postinstall": "spago install",
     "build": "spago build",
-    "bundle": "spago bundle --platform browser --bundle-type module --module Main --outfile html/index.js --minify",
-    "spago-install": "spago install"
+    "bundle": "spago bundle --platform browser --bundle-type main --module Main --outfile html/index.js --minify",
+    "serve": "npx serve ./html"
   },
-  "dependencies": {
+  "devDependencies": {
     "purescript": "^0.15.16",
-    "spago": "^1.0.4"
+    "spago": "^1.0.4",
+    "esbuild": "^0.28.2",
+    "serve": "^14.2.6"
   }
 }
