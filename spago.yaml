@@ -1,0 +1,20 @@
+package:
+  name: free-turtle
+  dependencies:
+    - canvas
+    - console
+    - effect
+    - free
+    - maybe
+    - numbers
+    - prelude
+    - psci-support
+    - transformers
+    - tuples
+  test:
+    main: Test.Main
+    dependencies: []
+workspace:
+  packageSet:
+    registry: 80.3.1
+  extraPackages: {}

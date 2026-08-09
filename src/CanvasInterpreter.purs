@@ -9,7 +9,7 @@ import Control.Monad.Free (runFreeM)
 import Control.Monad.State (State, evalState, get, modify_, put)
 import Data.Tuple
 import Data.Foldable
-import Math (sin, cos, pi, (%))
+import Data.Number (sin, cos, pi, (%))
 
 --------------------------------------------------------------------------------
 
