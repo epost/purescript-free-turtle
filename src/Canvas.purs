@@ -22,7 +22,7 @@ foreign import stroke :: Context2D -> Effect Context2D
 foreign import lineTo :: Distance -> Distance -> Context2D -> Effect Context2D
 
 drawArc :: Distance -> Distance -> Distance -> Angle -> Angle -> Context2D -> Effect Context2D
-drawArc = drawFilledArc_ffi "transparent"
+drawArc = drawFilledArcForeign "transparent"
 
 drawFilledArc :: Maybe Color -> Distance -> Distance -> Distance -> Angle -> Angle -> Context2D -> Effect Context2D
 drawFilledArc col = drawFilledArcForeign $ maybe "" colorToCanvasStyle col

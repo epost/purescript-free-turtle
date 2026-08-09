@@ -2,13 +2,13 @@
 
 // module Canvas
 
-exports.get2DContext = function(canvasId) {
+export const get2DContext = function(canvasId) {
   return function() {
     return document.getElementById(canvasId).getContext('2d');
   };
 };
 
-exports.initContext = function(color) {
+export const initContext = function(color) {
   return function initContext(context) {
     return function() {
       context.lineWidth = 2;
@@ -18,28 +18,28 @@ exports.initContext = function(color) {
   };
 };
 
-exports.beginPath = function(context) {
+export const beginPath = function(context) {
   return function() {
     context.beginPath();
     return context;
   };
 };
 
-exports.closePath = function(context) {
+export const closePath = function(context) {
   return function() {
     context.closePath();
     return context;
   };
 };
 
-exports.stroke = function(context) {
+export const stroke = function(context) {
   return function() {
     context.stroke();
     return context;
   };
 };
 
-exports.lineTo = function(x) {
+export const lineTo = function(x) {
   return function(y) {
     return function (context) {
       return function() {
@@ -50,7 +50,7 @@ exports.lineTo = function(x) {
   };
 };
 
-exports["drawFilledArcForeign"] = function(fillStyle) {
+export const drawFilledArcForeign = function(fillStyle) {
   return function (x) {
     return function(y) {
       return function(r) {
@@ -71,7 +71,7 @@ exports["drawFilledArcForeign"] = function(fillStyle) {
   };
 };
 
-exports.moveTo = function(x) {
+export const moveTo = function(x) {
   return function(y) {
     return function (context) {
       return function() {
@@ -82,7 +82,7 @@ exports.moveTo = function(x) {
   };
 };
 
-exports.setStrokeStyle = function(style) {
+export const setStrokeStyle = function(style) {
   return function (context) {
     return function() {
       context.strokeStyle = style;
