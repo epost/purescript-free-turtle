@@ -50,7 +50,7 @@ exports.lineTo = function(x) {
   };
 };
 
-exports["drawFilledArc'"] = function(fillStyle) {
+exports["drawFilledArcForeign"] = function(fillStyle) {
   return function (x) {
     return function(y) {
       return function(r) {
