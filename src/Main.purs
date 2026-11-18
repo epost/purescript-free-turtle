@@ -4,7 +4,6 @@ import Prelude
 import Language
 import Canvas (Context2D)
 import CanvasInterpreter as CanvasInterpreter
-import Control.Monad
 import Effect (Effect)
 
 main :: Effect Context2D
@@ -24,6 +23,7 @@ main = CanvasInterpreter.render "turtleCanvas" do
   color Green
   star
 
+star :: TurtleProg Unit
 star = do
   penDown
   right 144.0
