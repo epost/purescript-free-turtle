@@ -13,9 +13,9 @@
     "serve": "npx serve ./html"
   },
   "devDependencies": {
-    "purescript": "^0.15.16",
-    "spago": "^1.0.4",
+    "purescript": "^0.15.17",
+    "spago": "^1.0.5",
     "esbuild": "^0.28.2",
-    "serve": "^14.2.6"
+    "serve": "^14.2.8"
   }
 }
