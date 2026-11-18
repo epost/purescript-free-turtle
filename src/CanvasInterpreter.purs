@@ -40,13 +40,13 @@ interpret' turtleProg =
 
 
 -- | A natural transformation from `TurtleProg` to `State Turtle`.
-interpret'' :: TurtleProg (Array (Context2D -> Effect Context2D))
+interpret'' :: TurtleProg   (Array (Context2D -> Effect Context2D))
             -> State Turtle (Array (Context2D -> Effect Context2D))
 interpret'' = runFreeM interpret
 
   where
-    -- Pick off the outermost TurtleCmd from the TurtleProg and interpret it.
-    interpret :: TurtleCmd    (TurtleProg (Array (Context2D -> Effect Context2D)))
+    -- Pick off the outermost TurtleAction from the TurtleProg and interpret it.
+    interpret :: TurtleAction (TurtleProg (Array (Context2D -> Effect Context2D)))
               -> State Turtle (TurtleProg (Array (Context2D -> Effect Context2D)))
 
     interpret (PenDown rest) = do

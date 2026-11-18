@@ -9,14 +9,14 @@ type Angle = Number
 type Distance = Number
 data Color = Red | Green | Blue | Yellow | Purple | Magenta | Cyan | Black | White | CustomColor String
 
-data TurtleCmd a = Forward Distance a
-                 | Arc Distance Angle a
-                 | Right Angle a
-                 | PenUp a
-                 | PenDown a
-                 | UseColor Color a
+data TurtleAction a = Forward Distance a
+                    | Arc Distance Angle a
+                    | Right Angle a
+                    | PenUp a
+                    | PenDown a
+                    | UseColor Color a
 
-instance functorTurtleCmd :: Functor TurtleCmd where
+instance functorTurtleAction :: Functor TurtleAction where
   map f (Forward dist r)     = Forward dist (f r)
   map f (Arc radius angle r) = Arc radius angle (f r)
   map f (Right angle r)      = Right angle (f r)
@@ -24,10 +24,10 @@ instance functorTurtleCmd :: Functor TurtleCmd where
   map f (PenDown r)          = PenDown (f r)
   map f (UseColor col r)     = UseColor col (f r)
 
-instance turtleCmdShow :: (Show a) => Show (TurtleCmd a) where
-  show x = "(TurtleCmd TODO)"
+instance turtleActionShow :: (Show a) => Show (TurtleAction a) where
+  show x = "(TurtleAction TODO)"
 
-type TurtleProg = Free TurtleCmd
+type TurtleProg = Free TurtleAction
 
 forward :: Distance -> TurtleProg Unit
 forward n = liftF (Forward n unit)
