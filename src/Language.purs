@@ -16,13 +16,14 @@ data TurtleAction a = Forward Distance a
                     | PenDown a
                     | UseColor Color a
 
+-- PureScript 0.15.7 and up can derive this instance for us automatically using `derive (Functor)`.
 instance functorTurtleAction :: Functor TurtleAction where
-  map f (Forward dist r)     = Forward dist (f r)
+  map f (Forward dist     r) = Forward dist     (f r)
   map f (Arc radius angle r) = Arc radius angle (f r)
-  map f (Right angle r)      = Right angle (f r)
-  map f (PenUp r)            = PenUp (f r)
-  map f (PenDown r)          = PenDown (f r)
-  map f (UseColor col r)     = UseColor col (f r)
+  map f (Right angle      r) = Right angle      (f r)
+  map f (PenUp            r) = PenUp            (f r)
+  map f (PenDown          r) = PenDown          (f r)
+  map f (UseColor col     r) = UseColor col     (f r)
 
 instance turtleActionShow :: (Show a) => Show (TurtleAction a) where
   show x = "(TurtleAction TODO)"
