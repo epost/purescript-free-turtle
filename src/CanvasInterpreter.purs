@@ -40,23 +40,23 @@ interpret' turtleProg =
 -- | A natural transformation from `TurtleProg` to `State Turtle`.
 interpret'' :: TurtleProg   (Array (Context2D -> Effect Context2D))
             -> State Turtle (Array (Context2D -> Effect Context2D))
-interpret'' = runFreeM interpret
+interpret'' = runFreeM interp
 
   where
     -- Pick off the outermost TurtleAction from the TurtleProg and interpret it.
-    interpret :: TurtleAction (TurtleProg (Array (Context2D -> Effect Context2D)))
+    interp :: TurtleAction (TurtleProg (Array (Context2D -> Effect Context2D)))
               -> State Turtle (TurtleProg (Array (Context2D -> Effect Context2D)))
 
-    interpret (PenDown rest) = do
+    interp (PenDown rest) = do
       Turtle x y angle _ <- get
       put (Turtle x y angle true)
       pure ((\prog -> prog <> [beginPath, moveTo x y]) <$> rest)
 
-    interpret (PenUp rest) = do
+    interp (PenUp rest) = do
       modify_ \(Turtle x y angle _) -> Turtle x y angle false
       pure ((\prog -> prog <> [stroke]) <$> rest)
 
-    interpret (Forward r rest) = do
+    interp (Forward r rest) = do
       Turtle x y angle p <- get
       let x' = x + adjacent r angle
           y' = y + opposite r angle
@@ -64,15 +64,15 @@ interpret'' = runFreeM interpret
       put (Turtle x' y' angle p)
       pure ((\prog -> prog <> [instr]) <$> rest)
 
-    interpret (Right angleDeg rest) = do
+    interp (Right angleDeg rest) = do
       let angle = rad angleDeg
       modify_ \(Turtle x y angle0 p) -> Turtle x y (angle0 + angle) p
       pure rest
 
-    interpret (UseColor col rest) = do
+    interp (UseColor col rest) = do
       pure ((\prog -> prog <> [setStrokeStyle $ colorToCanvasStyle col]) <$> rest)
 
-    interpret (Arc r arcAngleDeg rest) = do
+    interp (Arc r arcAngleDeg rest) = do
       Turtle x y turtleAngle p <- get
       let angleEnd = turtleAngle + rad arcAngleDeg
           angle'   = angleEnd + rad 90.0
