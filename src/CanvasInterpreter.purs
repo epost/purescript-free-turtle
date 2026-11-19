@@ -2,13 +2,11 @@ module CanvasInterpreter where
 
 import Prelude
 import Canvas
-import Effect
+import Effect (Effect)
 import Language
-import Control.Monad
 import Control.Monad.Free (runFreeM)
 import Control.Monad.State (State, evalState, get, modify_, put)
-import Data.Tuple
-import Data.Foldable
+import Data.Foldable (foldl)
 import Data.Number (sin, cos, pi, (%))
 
 --------------------------------------------------------------------------------
@@ -50,7 +48,7 @@ interpret'' = runFreeM interpret
               -> State Turtle (TurtleProg (Array (Context2D -> Effect Context2D)))
 
     interpret (PenDown rest) = do
-      Turtle x y angle p <- get
+      Turtle x y angle _ <- get
       put (Turtle x y angle true)
       pure ((\prog -> prog <> [beginPath, moveTo x y]) <$> rest)
 

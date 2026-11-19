@@ -1,7 +1,6 @@
 module Language where
 
 import Prelude
-import Control.Monad
 import Control.Monad.Free (Free, liftF)
 
 
@@ -26,7 +25,7 @@ instance functorTurtleAction :: Functor TurtleAction where
   map f (UseColor col     r) = UseColor col     (f r)
 
 instance turtleActionShow :: (Show a) => Show (TurtleAction a) where
-  show x = "(TurtleAction TODO)"
+  show _ = "(TurtleAction TODO)"
 
 type TurtleProg = Free TurtleAction
 
